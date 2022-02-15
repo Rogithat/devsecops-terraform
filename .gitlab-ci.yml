@@ -1,0 +1,53 @@
+stages:
+  - terraform:validate
+  - terraform:plan
+  - terraform:apply
+
+.base-terraform:
+  image:
+    name: "hashicorp/terraform:0.13.3"
+  before_script:
+    - terraform --version
+    - mkdir -p ./creds
+    - echo $_GOOGLE_APPLICATION_CREDENTIALS_BASE64 | base64 -d > ./creds/serviceaccount.json
+    - export GOOGLE_CREDENTIALS="$(cat ./creds/serviceaccount.json)"
+    - terraform init
+  tags:
+    - "devops-xlabs-runner"
+
+validate:
+  stage: terraform:validate
+  extends: .base-terraform
+  script:
+    - terraform validate
+    - terraform fmt -check=true
+  only:
+    - master
+  tags:
+    - "devops-xlabs-runner"
+
+plan production:
+  stage: terraform:plan
+  extends: .base-terraform
+  script:
+    - terraform plan -var-file=./envs/prd/prd.tfvars
+  only:
+    - master
+  resource_group: production
+  tags:
+    - "devops-xlabs-runner"
+
+apply:
+  stage: terraform:apply
+  extends: .base-terraform
+  script:
+    - terraform destroy -auto-approve -var-file=./envs/prd/prd.tfvars
+  dependencies:
+    - plan production
+  only:
+    - master
+  resource_group: production
+  environment:
+    name: production
+  tags:
+    - "devops-xlabs-runner"
