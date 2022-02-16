@@ -15,10 +15,10 @@ module "gke" {
   name                   = "devsecopstcc-cluster"
   regional               = true
   region                 = var.region
-  network                = "default"
-  subnetwork             = "default"
-  ip_range_pods          = "default"
-  ip_range_services      = "default"
+  network                = "vpc-devsecops"
+  subnetwork             = "subnet-01"
+  ip_range_pods          = "subnet-01-secondary-01"
+  ip_range_services      = "subnet-01-secondary-02"
   create_service_account = false
   service_account           = var.compute_engine_service_account
   enable_private_endpoint   = false
