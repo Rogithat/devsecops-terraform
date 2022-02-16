@@ -20,7 +20,7 @@ module "gke" {
   ip_range_pods          = "subnet-01-secondary-01"
   ip_range_services      = "subnet-01-secondary-02"
   create_service_account = false
-  service_account           = var.compute_engine_service_account
+  #service_account           = var.compute_engine_service_account
   enable_private_endpoint   = false
   enable_private_nodes      = true
   master_ipv4_cidr_block    = "172.16.3.0/28"
