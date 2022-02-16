@@ -24,7 +24,7 @@ module "gke" {
   enable_private_endpoint   = false
   enable_private_nodes      = true
   master_ipv4_cidr_block    = "172.16.3.0/28"
-  default_max_pods_per_node = 100
+  default_max_pods_per_node = 50
   remove_default_node_pool  = true
 
   node_pools = [
@@ -32,7 +32,7 @@ module "gke" {
       name            = "pool-01"
       machine_type    = "n1-standard-2"
       min_count       = 1
-      max_count       = 100
+      max_count       = 3
       local_ssd_count = 0
       disk_size_gb    = 100
       disk_type       = "pd-standard"
@@ -41,7 +41,7 @@ module "gke" {
       auto_upgrade    = true
       #service_account   = var.compute_engine_service_account
       preemptible       = true
-      max_pods_per_node = 110
+      max_pods_per_node = 50
     },
   ]
 
