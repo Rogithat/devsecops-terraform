@@ -14,7 +14,7 @@ module "vpc_subnets" {
   version = "~> 3.1.1"
 
   project_id   = var.project_id
-  network_name = "vpc-devsecops"
+  network_name = module.vpc.network_name
 
   subnets = [
     {
