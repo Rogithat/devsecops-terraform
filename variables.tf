@@ -28,7 +28,3 @@ variable "terraform_service_account" {
   default     = "terraform-sa@tcc-devsecops.iam.gserviceaccount.com"
   description = "Service account que será utilizada para executar o Terraform (via impersonate)."
 }
-
-variable "compute_engine_service_account"{
-  default     = "terraform-sa@tcc-devsecops.iam.gserviceaccount.com"
-}
