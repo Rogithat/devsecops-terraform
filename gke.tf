@@ -9,8 +9,7 @@ data "google_compute_subnetwork" "subnetwork" {
 }
 
 module "gke" {
-  #source                    = "./modules/beta-private-cluster"
-  source                 = "terraform-google-modules/kubernetes-engine/google//modules/beta-private-cluster"
+  source                 = "terraform-google-modules/kubernetes-engine/google/modules/beta-private-cluster"
   version                = "14.2.0"
   project_id             = var.project_id
   name                   = "some-cluster"
