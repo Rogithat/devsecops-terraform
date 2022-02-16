@@ -1,15 +1,14 @@
-#odule "vpc" {
- # source  = "terraform-google-modules/network/google//modules/vpc"
- # version = "~> 3.1.1"
-#
- # project_id   = var.project_id
- # network_name = var.subnetwork
-#
- # shared_vpc_host = false
-#}
-
-
 module "vpc" {
+ source  = "terraform-google-modules/network/google//modules/vpc"
+ version = "~> 3.1.1"
+ project_id   = var.project_id
+ network_name = var.subnetwork
+
+ shared_vpc_host = false
+}
+
+
+module "vpc_subnet" {
   source  = "terraform-google-modules/network/google//modules/subnets-beta"
   version = "~> 3.1.1"
 
