@@ -16,7 +16,7 @@ module "gke" {
   name                   = "some-cluster"
   regional               = true
   region                 = var.region
-  network                = "vpc-sometests"
+  network                = "vpc-devsecops"
   subnetwork             = "subnet-01"
   ip_range_pods          = "subnet-01-secondary-01"
   ip_range_services      = "subnet-01-secondary-02"
