@@ -46,7 +46,6 @@ jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
-    environment: production
     needs: [terrascan_job, checkov-job]
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
@@ -90,7 +89,6 @@ jobs:
   k8s_auth:
     name: 'GKE Auth'
     runs-on: ubuntu-latest
-    environment: production
     needs: [terraform]
     permissions:
       contents: 'read'
