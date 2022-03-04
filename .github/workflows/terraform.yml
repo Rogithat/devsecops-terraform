@@ -86,20 +86,24 @@ jobs:
     #- name: Terraform Destroy
     #  if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     #  run: terraform destroy -auto-approve
-  K8SAuth:
-    name: 'GKE Auth'
-    runs-on: 'ubuntu-latest'
 
-    - name: 'Set up Cloud SDK'
-      uses: 'google-github-actions/setup-gcloud@v0'
-      with:
-        service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+  k8s_auth:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
 
-    - name: 'Use gcloud CLI'
-      run: 'gcloud info'
-    
-    - name: 'GCloud gke login'
+    steps:
+    - id: 'auth'
       uses: 'google-github-actions/auth@v0'
       with:
-        service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-      run: gcloud container clusters list && gcloud container clusters get-credentials devsecopstcc-cluster --zone=us-east1a
+        credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT }}'
+
+    - id: 'get-credentials'
+      uses: 'google-github-actions/get-gke-credentials@v0'
+      with:
+        cluster_name: 'devsecopstcc-cluster'
+        location: 'us-east1-a'
+
+    # The KUBECONFIG env var is automatically exported and picked up by kubectl.
+    - id: 'get-pods'
+      run: 'kubectl get pods'
