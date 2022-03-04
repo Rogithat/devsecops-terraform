@@ -85,7 +85,7 @@ jobs:
   k8s_dast:
     name: K8S-Dast
     runs-on: ubuntu-latest
-    #needs: [terraform]
+    needs: [terraform]
     permissions:
       contents: 'read'
       id-token: 'write'
