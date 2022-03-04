@@ -87,17 +87,10 @@ jobs:
     #  if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     #  run: terraform destroy -auto-approve
   K8S_auth:
-    # Add "id-token" with the intended permissions.
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
     steps:
     - id: 'auth'
       uses: 'google-github-actions/auth@v0'
       with:
-        workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
-        service_account: 'my-service-account@my-project.iam.gserviceaccount.com'
         service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
     - name: 'Set up Cloud SDK'
