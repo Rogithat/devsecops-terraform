@@ -88,6 +88,10 @@ jobs:
     #  run: terraform destroy -auto-approve
 
   k8s_auth:
+    name: 'GKE Auth'
+    runs-on: ubuntu-latest
+    environment: production
+    needs: [terraform]
     permissions:
       contents: 'read'
       id-token: 'write'
