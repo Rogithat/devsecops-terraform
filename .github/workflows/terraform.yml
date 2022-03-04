@@ -86,7 +86,7 @@ jobs:
     #- name: Terraform Destroy
     #  if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     #  run: terraform destroy -auto-approve
-  K8S_auth:
+  K8SAuth:
     name: 'GKE Auth'
     runs-on: 'ubuntu-latest'
 
