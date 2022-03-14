@@ -119,7 +119,13 @@ jobs:
 
       - name: Run Checkov action
         id: checkov-DAST
-        run: checkov -d . --framework kubernetes
+        uses: bridgecrewio/checkov-action@master
+        with:
+          quiet: false # optional: display only failed checks
+          soft_fail: true # optional: do not return an error code if there are failed checks
+          framework: kubernetes # optional: run only on a specific infrastructure {cloudformation,terraform,kubernetes,all}
+          output_format: sarif # optional: the output format, one of: cli, json, junitxml, github_failed_only, or sarif. Default: sarif
+          log_level: DEBUG # optional: set log level. Default WARNING
 
   terraform_destroy:
     name: Terraform Destroy
