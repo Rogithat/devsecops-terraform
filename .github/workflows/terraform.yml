@@ -10,7 +10,7 @@ jobs:
 #SAST job
   terrascan_job:
     runs-on: ubuntu-latest
-    name: terrascan-action
+    name: terrascan-SAST-action
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -21,13 +21,18 @@ jobs:
         iac_type: 'terraform'
         iac_version: 'v14'
         policy_type: 'gcp'
+        sarif_upload: true
         only_warn: true
+
+    - name: Upload SARIF file
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: terrascan.sarif    
   #on: [push]
 
   checkov-job:
     runs-on: ubuntu-latest
-    name: checkov-action
-    needs: terrascan_job
+    name: checkov-Terraform-SAST-action
     steps:
       - name: Checkout repo
         uses: actions/checkout@master
@@ -35,13 +40,16 @@ jobs:
       - name: Run Checkov action
         id: checkov
         uses: bridgecrewio/checkov-action@master
+        continue-on-error: true
         with:
           quiet: false # optional: display only failed checks
           soft_fail: true # optional: do not return an error code if there are failed checks
-          framework: terraform # optional: run only on a specific infrastructure {cloudformation,terraform,kubernetes,all}
+          framework: all # optional: run only on a specific infrastructure {cloudformation,terraform,kubernetes,all}
           output_format: sarif # optional: the output format, one of: cli, json, junitxml, github_failed_only, or sarif. Default: sarif
           download_external_modules: true # optional: download external terraform modules from public git repositories and terraform registry
           log_level: DEBUG # optional: set log level. Default WARNING
+          hard_fail_on: CKV_GCP_2,CKV2_GCP_3,CKV_GCP_13,CKV_GCP_18,CKV_GCP_49,CKV_K8S_2,CKV_K8S_38,CKV_K8S_68,CKV_K8S_77
+           # ref: https://www.checkov.io/5.Policy%20Index/kubernetes.html, https://www.checkov.io/5.Policy%20Index/terraform.html
 
   terraform:
     name: Terraform
@@ -85,7 +93,7 @@ jobs:
   k8s_dast:
     name: K8S-Dast
     runs-on: ubuntu-latest
-    needs: [terraform]
+    needs: terraform
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -106,18 +114,33 @@ jobs:
     - id: 'get-pods'
       run: 'kubectl get pods'
     
+    - id: Applying vulnerable manifests
+      continue-on-error: true
+      run: kubectl create -f k8s-manifests/app -f k8s-manifests/dashboard -f k8s-manifests/namespace -f k8s-manifests/secrets
+    
     - id: Kubescape
-      run: curl -s https://raw.githubusercontent.com/armosec/kubescape/master/install.sh | /bin/bash  && kubescape scan --submit --enable-host-scan
+      run: curl -s https://raw.githubusercontent.com/armosec/kubescape/master/install.sh | /bin/bash
+    
+    - id: NSA-scan
+      continue-on-error: true
+      run: kubescape scan framework nsa -t 80
+    
+    - id: MITRE-Scan
+      continue-on-error: true
+      run: kubescape scan framework mitre -t 80
+    
+    #ref: https://hub.armo.cloud/docs/github-1
   
   checkov-dast-job:
     runs-on: ubuntu-latest
-    name: checkov-action
-    needs: k8s_dast
+    name: checkov-DAST-action
+    needs: terraform
     steps:
       - name: Checkout repo
         uses: actions/checkout@master
 
       - name: Run Checkov action
+        continue-on-error: true
         id: checkov-DAST
         uses: bridgecrewio/checkov-action@master
         with:
@@ -126,11 +149,12 @@ jobs:
           framework: kubernetes # optional: run only on a specific infrastructure {cloudformation,terraform,kubernetes,all}
           output_format: sarif # optional: the output format, one of: cli, json, junitxml, github_failed_only, or sarif. Default: sarif
           log_level: DEBUG # optional: set log level. Default WARNING
+          hard_fail_on: CKV_K8S_2,CKV_K8S_38,CKV_K8S_68,CKV_K8S_77
 
   terraform_destroy:
     name: Terraform Destroy
     runs-on: ubuntu-latest
-    needs: [k8s_dast]
+    needs: k8s_dast
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
