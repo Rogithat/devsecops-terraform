@@ -114,7 +114,7 @@ jobs:
     - id: 'get-pods'
       run: 'kubectl get pods'
     
-    - id: Applying vulnerable manifests
+    - name: Applying vulnerable manifests
       continue-on-error: true
       run: kubectl create -f k8s-manifests/app -f k8s-manifests/dashboard -f k8s-manifests/namespace -f k8s-manifests/secrets
     
@@ -126,7 +126,6 @@ jobs:
       run: kubescape scan framework nsa -t 80
     
     - id: MITRE-Scan
-      continue-on-error: true
       run: kubescape scan framework mitre -t 80
     
     #ref: https://hub.armo.cloud/docs/github-1
