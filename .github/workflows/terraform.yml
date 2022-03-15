@@ -15,6 +15,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
     - name: Run Terrascan
+      continue-on-error: true
       id: terrascan
       uses: accurics/terrascan-action@main
       with:
