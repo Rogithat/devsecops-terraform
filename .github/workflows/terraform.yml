@@ -41,11 +41,32 @@ jobs:
         with:
           quiet: false # optional: display only failed checks
           soft_fail: true # optional: do not return an error code if there are failed checks
-          framework: terraform,kubernetes # optional: run only on a specific infrastructure {cloudformation,terraform,kubernetes,all}
+          framework: terraform # optional: run only on a specific infrastructure {cloudformation,terraform,kubernetes,all}
           output_format: sarif # optional: the output format, one of: cli, json, junitxml, github_failed_only, or sarif. Default: sarif
           download_external_modules: true # optional: download external terraform modules from public git repositories and terraform registry
           log_level: DEBUG # optional: set log level. Default WARNING
           hard_fail_on: CKV_GCP_2,CKV2_GCP_3,CKV_GCP_13,CKV_GCP_18,CKV_GCP_49,CKV_K8S_2,CKV_K8S_38,CKV_K8S_68,CKV_K8S_77
+           # ref: https://www.checkov.io/5.Policy%20Index/kubernetes.html, https://www.checkov.io/5.Policy%20Index/terraform.html
+  
+  checkov-k8s-job:
+    runs-on: ubuntu-latest
+    name: checkov-Kubernetes-SAST-action
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@master
+
+      - name: Run Checkov action
+        id: checkov
+        uses: bridgecrewio/checkov-action@master
+        continue-on-error: true
+        with:
+          quiet: false # optional: display only failed checks
+          soft_fail: true # optional: do not return an error code if there are failed checks
+          framework: kubernetes # optional: run only on a specific infrastructure {cloudformation,terraform,kubernetes,all}
+          output_format: sarif # optional: the output format, one of: cli, json, junitxml, github_failed_only, or sarif. Default: sarif
+          download_external_modules: true # optional: download external terraform modules from public git repositories and terraform registry
+          log_level: DEBUG # optional: set log level. Default WARNING
+          hard_fail_on: CKV_K8S_2,CKV_K8S_38,CKV_K8S_68,CKV_K8S_77
            # ref: https://www.checkov.io/5.Policy%20Index/kubernetes.html, https://www.checkov.io/5.Policy%20Index/terraform.html
 
   terraform:
