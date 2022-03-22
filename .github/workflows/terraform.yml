@@ -72,7 +72,7 @@ jobs:
   terraform:
     name: Terraform
     runs-on: ubuntu-latest
-    needs: [terrascan_job, checkov-job]
+    needs: [terrascan_job, checkov-job, checkov-k8s-job]
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
