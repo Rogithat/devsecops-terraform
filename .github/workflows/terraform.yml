@@ -15,7 +15,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
     - name: Run Terrascan
-      continue-on-error: true
+      continue-on-error: false
       id: terrascan
       uses: accurics/terrascan-action@main
       with:
@@ -23,7 +23,7 @@ jobs:
         iac_version: 'v14'
         policy_type: 'gcp'
         sarif_upload: false
-        only_warn: true
+        only_warn: false
  
   #on: [push]
 
@@ -37,7 +37,7 @@ jobs:
       - name: Run Checkov action
         id: checkov
         uses: bridgecrewio/checkov-action@master
-        continue-on-error: true
+        continue-on-error: false
         with:
           quiet: false # optional: display only failed checks
           soft_fail: true # optional: do not return an error code if there are failed checks
@@ -58,7 +58,7 @@ jobs:
       - name: Run Checkov action
         id: checkov
         uses: bridgecrewio/checkov-action@master
-        continue-on-error: true
+        continue-on-error: false
         with:
           quiet: false # optional: display only failed checks
           soft_fail: true # optional: do not return an error code if there are failed checks
