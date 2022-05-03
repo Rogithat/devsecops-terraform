@@ -167,32 +167,3 @@ jobs:
           output_format: sarif # optional: the output format, one of: cli, json, junitxml, github_failed_only, or sarif. Default: sarif
           log_level: DEBUG # optional: set log level. Default WARNING
           hard_fail_on: CKV_K8S_2,CKV_K8S_38,CKV_K8S_68,CKV_K8S_77
-
-  #terraform_destroy:
-   # name: Terraform Destroy
-   # runs-on: ubuntu-latest
-   # needs: [k8s_dast,checkov-dast-job]
-
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
-    #defaults:
-     # run:
-      #  shell: bash
-
-    #steps:
-    # Checkout the repository to the GitHub Actions runner
-    #- name: Checkout
-     # uses: actions/checkout@v2
-    
-    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-      with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
-    - name: Terraform Init
-      run: terraform init
-    
-    - name: Terraform Destroy
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: terraform destroy -auto-approve
