@@ -168,20 +168,20 @@ jobs:
           log_level: DEBUG # optional: set log level. Default WARNING
           hard_fail_on: CKV_K8S_2,CKV_K8S_38,CKV_K8S_68,CKV_K8S_77
 
-  terraform_destroy:
-    name: Terraform Destroy
-    runs-on: ubuntu-latest
-    needs: [k8s_dast,checkov-dast-job]
+  #terraform_destroy:
+   # name: Terraform Destroy
+   # runs-on: ubuntu-latest
+   # needs: [k8s_dast,checkov-dast-job]
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
-    defaults:
-      run:
-        shell: bash
+    #defaults:
+     # run:
+      #  shell: bash
 
-    steps:
+    #steps:
     # Checkout the repository to the GitHub Actions runner
-    - name: Checkout
-      uses: actions/checkout@v2
+    #- name: Checkout
+     # uses: actions/checkout@v2
     
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
