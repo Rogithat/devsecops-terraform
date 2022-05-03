@@ -15,7 +15,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
     - name: Run Terrascan
-      continue-on-error: false
+      continue-on-error: true
       id: terrascan
       uses: accurics/terrascan-action@main
       with:
@@ -37,7 +37,7 @@ jobs:
       - name: Run Checkov action
         id: checkov
         uses: bridgecrewio/checkov-action@master
-        continue-on-error: false
+        continue-on-error: true
         with:
           quiet: false # optional: display only failed checks
           soft_fail: true # optional: do not return an error code if there are failed checks
