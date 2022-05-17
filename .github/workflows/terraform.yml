@@ -141,10 +141,10 @@ jobs:
     
     - id: NSA-scan
       continue-on-error: true
-      run: kubescape scan framework nsa -t 80
+      run: kubescape scan framework nsa --controls-config=./controls-input.json
     
     - id: MITRE-Scan
-      run: kubescape scan framework mitre -t 80
+      run: kubescape scan framework mitre --controls-config=./controls-input.json
     
     #ref: https://hub.armo.cloud/docs/github-1
   
